@@ -3,6 +3,8 @@ import { UsersService } from './users.service';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiResponse } from '@/common/dto/response.dto';
+import { User } from '@prisma/client';
 
 
 @Controller('users')
@@ -20,8 +22,15 @@ export class UsersController {
     }
 
     @Post()
-    createUser(@Body() newUser: CreateUserDto) {
-        return this.usersService.create(newUser);
+    async createUser(@Body() newUser: CreateUserDto): Promise<ApiResponse<User>> {
+
+        const user = await this.usersService.create(newUser);
+
+        return {
+            success: true,
+            message: 'Usuário criado com sucesso',
+            object: user
+        }
     }
 
     @Delete(":id")

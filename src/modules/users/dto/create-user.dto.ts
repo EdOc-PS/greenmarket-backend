@@ -1,5 +1,6 @@
 import { Role } from "@common/enums/enum"
-import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, MinLength } from "class-validator"
+import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, MinLength } from "class-validator"
+import { Transform } from 'class-transformer'
 
 export class CreateUserDto {
     @IsString()
@@ -19,9 +20,16 @@ export class CreateUserDto {
     @IsOptional()
     cpf?: string
 
-    @IsDateString()
+    @Transform(({ value }) => {
+        if (typeof value === 'string') {
+            const [day, month, year] = value.split('/')
+            return new Date(`${year}-${month}-${day}`)
+        }
+        return value
+    })
+    @IsDate()
     @IsNotEmpty()
-    birthday!: string
+    birthdate!: Date
 
     @IsOptional()
     @IsPhoneNumber('BR')
