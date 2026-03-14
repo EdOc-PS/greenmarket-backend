@@ -78,7 +78,8 @@ export class CartService {
                 quantity: item.quantity,
                 productId: item.productId,
                 productName: item.product.name,
-                price: item.product.price
+                price: item.product.price,
+                stock: item.product.stock
             }))
         };
     }
