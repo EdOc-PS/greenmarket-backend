@@ -6,7 +6,7 @@ export class CategoriesRepository {
     constructor(private prisma: PrismaService) {}
     
     findById(id: number) {
-        return this.prisma.user.findUnique({
+        return this.prisma.category.findUnique({
             where: { id: Number(id) },
         });
     }
