@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, Min, MinLength } from "class-validator"
+import { IsBoolean, IsNumber, IsOptional, IsString, Min, MinLength } from "class-validator"
 
 
 export class CreateProductDto {
@@ -21,6 +21,10 @@ export class CreateProductDto {
     @IsNumber()
     @Min(0, { message: 'O estoque não pode ser negativo' })
     stock!: number
+
+    @IsOptional()
+    @IsBoolean()
+    status?: boolean
 
     @IsNumber()
     categoryId!: number;

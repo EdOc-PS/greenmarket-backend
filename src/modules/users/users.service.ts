@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { UsersRepository } from "./repositories/users.repository";
 
 @Injectable()
@@ -12,6 +12,16 @@ export class UsersService {
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return user;
+  }
+
+  async validateActiveUser(id: number) {
+    const user = await this.findByIdOrFail(id);
+
+    if (!user.status) {
+      throw new ForbiddenException('Usuário inativo');
     }
 
     return user;

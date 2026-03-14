@@ -15,6 +15,19 @@ export class OrderService {
 
     async createOrder(userId: number) {
 
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+            select: { status: true }
+        });
+
+        if (!user) {
+            throw new NotFoundException('Usuário não encontrado');
+        }
+
+        if (!user.status) {
+            throw new BadRequestException('Usuário inativo');
+        }
+
         const cart = await this.cartService.getCart(userId);
 
         if (!cart || cart.itemsCart.length === 0) {

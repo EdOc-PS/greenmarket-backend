@@ -14,6 +14,10 @@ export class ProductsService {
             throw new NotFoundException("Produto não encontrado");
         }
 
+        if (!product.status) {
+            throw new BadRequestException("Produto inativo");
+        }
+
         return product;
     }
 

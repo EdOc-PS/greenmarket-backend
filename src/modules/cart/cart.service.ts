@@ -27,8 +27,8 @@ export class CartService {
 
     async addItem(userId: number, cartItemDto: AddCartItemDto) {
 
-        //validar se o usuário existe
-        await this.userSerivce.findByIdOrFail(userId);
+        //validar se o usuário existe e está ativo
+        await this.userSerivce.validateActiveUser(userId);
 
         const cart = await this.getOrCreateCart(userId);
 
@@ -102,7 +102,7 @@ export class CartService {
 
     async updateItem(userId: number, itemId: number, quantity: number) {
 
-        await this.userSerivce.findByIdOrFail(userId);
+        await this.userSerivce.validateActiveUser(userId);
 
         const item = await this.getItemByIdOrFail(itemId);
         this.assertItemBelongsToUser(item.cart.userId, userId);
@@ -115,7 +115,7 @@ export class CartService {
 
     async removeItem(userId: number, itemId: number) {
 
-        await this.userSerivce.findByIdOrFail(userId);
+        await this.userSerivce.validateActiveUser(userId);
 
         const item = await this.getItemByIdOrFail(itemId);
         this.assertItemBelongsToUser(item.cart.userId, userId);

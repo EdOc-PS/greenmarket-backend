@@ -24,6 +24,8 @@ export class AuthService {
 
         if (!user) throw new UnauthorizedException('Email não encontrado, verifique e tente novamente');
 
+        if (!user.status) throw new UnauthorizedException('Usuário inativo');
+
         const isPasswordValid = await bcrypt.compare(loginRequest.password, user.password);
 
         if (!isPasswordValid) throw new UnauthorizedException('Credenciais inválidas');

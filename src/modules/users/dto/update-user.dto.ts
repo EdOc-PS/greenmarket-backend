@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer"
-import { IsDateString, IsEmail, IsOptional, IsPhoneNumber, IsString, MinLength } from "class-validator"
+import { IsBoolean, IsDateString, IsEmail, IsOptional, IsPhoneNumber, IsString, MinLength } from "class-validator"
 
 export class UpdateUserDto {
     @IsOptional()
@@ -35,5 +35,9 @@ export class UpdateUserDto {
     @IsOptional()
     @IsPhoneNumber('BR')
     phone?: string
+
+    @IsOptional()
+    @IsBoolean()
+    status?: boolean
 
 }
