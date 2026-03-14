@@ -3,7 +3,7 @@ import { ApiResponse } from '@/common/dto/response.dto';
 import { Address } from '@prisma/client';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
-import { AddressRepository } from './address.repository';
+import { AddressRepository } from './repositories/address.repository';
 
 @Controller('user/address')
 export class AddressController {

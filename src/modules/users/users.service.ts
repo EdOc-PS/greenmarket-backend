@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UsersRepository } from "./users.repository";
+import { UsersRepository } from "./repositories/users.repository";
 
 @Injectable()
 export class UsersService {

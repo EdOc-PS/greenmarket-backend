@@ -3,7 +3,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ApiResponse } from '@common/dto/response.dto';
 import { Product } from '@prisma/client';
-import { ProductsRepository } from './products.repository';
+import { ProductsRepository } from './repositories/products.repository';
 
 @Controller('products')
 export class ProductsController {
