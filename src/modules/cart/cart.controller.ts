@@ -1,16 +1,17 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Patch,
-    Delete,
-    Param,
-    Body
-} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, UseGuards, Req } from '@nestjs/common';
 
 import { CartService } from './cart.service';
 import { AddCartItemDto } from './dto/add-cart-item.dto';
 import { UpdateItemDto } from './dto/update-cart-item.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { type AuthenticatedRequest } from '@common/interfaces/authenticated';
+import { ApiBearerAuth } from '@nestjs/swagger';
+
+//UseGuards(JwtAuthGuard) é usado para proteger as rotas, garantindo que apenas usuários autenticados possam acessá-las. 
+//ApiBearerAuth é usado para indicar que as rotas deste controlador requerem autenticação via token Bearer (JWT).
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth('access-token')
+
 
 @Controller('user/cart')
 export class CartController {
@@ -19,40 +20,38 @@ export class CartController {
         private readonly cartService: CartService,
     ) { }
 
-    @Get(':userId')
-    getCart(
-        @Param('userId') userId: string
-    ) {
-        return this.cartService.getCart(Number(userId));
+    @Get()
+    getCart(@Req() req: AuthenticatedRequest) {
+        return this.cartService.getCart(Number(req.user.userId));
     }
 
-    @Post(':userId/items')
+    @Post('items')
     addItem(
-        @Param('userId') userId: string,
+        @Req() req: AuthenticatedRequest,
         @Body() adddCartItemDto: AddCartItemDto
     ) {
-        return this.cartService.addItem(Number(userId), adddCartItemDto);
+        return this.cartService.addItem(Number(req.user.userId), adddCartItemDto);
     }
 
-    @Patch(':userId/items/:itemId')
+    @Patch('/items/:itemId')
     updateItem(
-        @Param('userId') userId: string,
+        @Req() req: AuthenticatedRequest,
         @Param('itemId') itemId: string,
         @Body() updateItemDto: UpdateItemDto
     ) {
         return this.cartService.updateItem(
-            Number(userId),
+            Number(req.user.userId),
             Number(itemId),
             updateItemDto.quantity
         );
     }
 
-    @Delete(':userId/items/:itemId')
+    @Delete('items/:itemId')
     removeItem(
-        @Param('userId') userId: string,
+        @Req() req: AuthenticatedRequest,
         @Param('itemId') itemId: string
     ) {
-        return this.cartService.removeItem(Number(userId), Number(itemId));
+        return this.cartService.removeItem(Number(req.user.userId), Number(itemId));
     }
 
 }

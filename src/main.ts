@@ -19,9 +19,13 @@ async function bootstrap() {
 
   // ---- Swagger ----
   const config = new DocumentBuilder()
-    .setTitle('E-commerce API')
+    .setTitle('GreenMarket - API')
     .setDescription('API para gerenciamento de usuários, carrinho e pedidos')
     .setVersion('1.0')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'access-token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

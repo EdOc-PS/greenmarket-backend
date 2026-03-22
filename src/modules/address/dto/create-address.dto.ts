@@ -25,8 +25,6 @@ export class CreateAddressDto {
     @MaxLength(9, { message: 'O código postal deve conter no máximo 9 caracteres' })
     zipCode!: string
 
-    @IsNumber()
-    userId!: number;
 }
 
 

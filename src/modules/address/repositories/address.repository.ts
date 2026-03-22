@@ -22,11 +22,11 @@ export class AddressRepository {
         });
     }
 
-    async create(newAddress: CreateAddressDto) {
-        await this.usersService.findByIdOrFail(newAddress.userId);
+    async create(newAddress: CreateAddressDto, userId: number) {
+        await this.usersService.findByIdOrFail(userId);
 
         return this.prisma.address.create({
-            data: newAddress
+            data: { ...newAddress, userId }
         })
     }
 

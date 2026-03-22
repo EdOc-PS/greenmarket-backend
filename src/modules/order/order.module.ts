@@ -4,6 +4,7 @@ import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { OrderRepository } from './repositories/order.repository';
 import { CartModule } from '../cart/cart.module';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 
 @Module({
@@ -12,7 +13,8 @@ import { CartModule } from '../cart/cart.module';
     providers: [
         OrderService,
         OrderRepository,
-        PrismaService
+        PrismaService,
+        JwtAuthGuard
     ],
     exports: [OrderService]
 })

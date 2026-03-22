@@ -4,6 +4,7 @@ import { ProductsService } from './products.service';
 import { PrismaService } from '@/database/prisma.service';
 import { ProductsRepository } from './repositories/products.repository';
 import { CategoriesModule } from '../categories/categories.module';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Module({
   imports: [CategoriesModule],
@@ -11,7 +12,8 @@ import { CategoriesModule } from '../categories/categories.module';
   providers: [
     ProductsService,
     ProductsRepository,
-    PrismaService
+    PrismaService,
+    JwtAuthGuard
   ],
   exports: [ProductsService]
 })

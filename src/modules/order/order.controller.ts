@@ -1,7 +1,15 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { type AuthenticatedRequest } from '@/common/interfaces/authenticated';
+import { ApiBearerAuth } from '@nestjs/swagger';
+
+//UseGuards(JwtAuthGuard) é usado para proteger as rotas, garantindo que apenas usuários autenticados possam acessá-las. 
+//ApiBearerAuth é usado para indicar que as rotas deste controlador requerem autenticação via token Bearer (JWT).
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth('access-token')
+
 
 @Controller('orders')
 export class OrderController {
@@ -11,13 +19,13 @@ export class OrderController {
     ) { }
 
     @Post()
-    create(@Body() createOrderDto: CreateOrderDto) {
-        return this.orderService.createOrder(Number(createOrderDto.userId));
+    create(@Req() req: AuthenticatedRequest) {
+        return this.orderService.createOrder(Number(req.user.userId));
     }
 
-    @Get('user/:id')
-    getUserOrders(@Param('id', ParseIntPipe) userId: number) {
-        return this.orderService.getOrdersByUser(userId);
+    @Get('user')
+    getUserOrders(@Req() req: AuthenticatedRequest) {
+        return this.orderService.getOrdersByUser(Number(req.user.userId));
     }
 
     @Patch(':id/status')
