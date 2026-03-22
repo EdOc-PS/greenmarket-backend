@@ -1,34 +1,38 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiResponse } from '@/common/dto/response.dto';
+import { ApiResponse } from '@common/dto/response.dto';
 import { Address } from '@prisma/client';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
-import { AddressRepository } from './repositories/address.repository';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { type AuthenticatedRequest } from '@/common/interfaces/authenticated';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { type AuthenticatedRequest } from '@common/interfaces/authenticated';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CreateDocs, DeleteDocs, FindDocs, UpdateDocs } from '@swagger/address';
+import { AddressService } from './address.service';
 
 //UseGuards(JwtAuthGuard) é usado para proteger as rotas, garantindo que apenas usuários autenticados possam acessá-las. 
 //ApiBearerAuth é usado para indicar que as rotas deste controlador requerem autenticação via token Bearer (JWT).
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('access-token')
+@ApiTags('Address')
 
 
 @Controller('user/address')
 export class AddressController {
-    constructor(private addressRepository: AddressRepository) { }
+    constructor(private readonly addressService: AddressService) { }
 
+    @FindDocs()
     @Get()
     findAllByUser(@Req() req: AuthenticatedRequest) {
-        return this.addressRepository.findAllByUser(Number(req.user.userId));
+        return this.addressService.findAllByUser(Number(req.user.userId));
     }
 
+    @CreateDocs()
     @Post()
     async createAddress(
         @Req() req: AuthenticatedRequest,
         @Body() newAddress: CreateAddressDto
     ): Promise<ApiResponse<Address>> {
-        const address = await this.addressRepository.create(
+        const address = await this.addressService.create(
             newAddress,
             req.user.userId
         );
@@ -40,14 +44,16 @@ export class AddressController {
         }
     }
 
+    @DeleteDocs()
     @Delete(":id")
     delete(@Param("id") id: number) {
-        return this.addressRepository.delete(id);
+        return this.addressService.delete(id);
     }
 
+    @UpdateDocs()
     @Patch(":id")
     async update(@Param("id") id: number, @Body() updatedAddress: UpdateAddressDto) {
-        const address = await this.addressRepository.update(id, updatedAddress);
+        const address = await this.addressService.update(id, updatedAddress);
 
         return {
             success: true,

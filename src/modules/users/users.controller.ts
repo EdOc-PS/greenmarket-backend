@@ -2,18 +2,21 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Req, UseGuar
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { DeleteDocs, FindByIdDocs, FindDocs, UpdateDocs } from '@swagger/users';
 
 //UseGuards(JwtAuthGuard) é usado para proteger as rotas, garantindo que apenas usuários autenticados possam acessá-las. 
 //ApiBearerAuth é usado para indicar que as rotas deste controlador requerem autenticação via token Bearer (JWT).
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('access-token')
+@ApiTags('Users')
 
 @Controller('users')
 export class UsersController {
     constructor(private usersService: UsersService) { }
 
 
+    @FindDocs()
     @Get()
     async findAll() {
         const users = await this.usersService.findAll();
@@ -25,6 +28,7 @@ export class UsersController {
         }
     }
 
+    @FindByIdDocs()
     @Get(":id")
     async findUser(@Param("id", ParseIntPipe) id: number) {
 
@@ -38,11 +42,13 @@ export class UsersController {
     }
 
 
+    @DeleteDocs()
     @Delete(":id")
     deleteUser(@Param("id", ParseIntPipe) id: number) {
         return this.usersService.delete(id);
     }
 
+    @UpdateDocs()
     @Patch(":id")
     updateUser(@Param("id", ParseIntPipe) id: number, @Body() updatedUser: UpdateUserDto) {
         return this.usersService.update(id, updatedUser);

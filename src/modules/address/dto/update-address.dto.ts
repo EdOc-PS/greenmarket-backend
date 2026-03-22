@@ -30,7 +30,4 @@ export class UpdateAddressDto {
     @MinLength(8, { message: 'O código postal deve conter 8 caracteres' })
     @MaxLength(9, { message: 'O código postal deve conter no máximo 9 caracteres' })
     zipCode?: string;
-
-    @IsNumber()
-    userId!: number;
 }

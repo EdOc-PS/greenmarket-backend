@@ -19,7 +19,13 @@
       ],
       "@common/*": [
         "src/common/*"
-      ]
+      ],
+      "@modules/*": [
+        "src/modules/*"
+      ],
+      "@swagger/*": [
+        "src/common/swagger/*"
+      ],
     },
     "baseUrl": "./",
     "incremental": true,
