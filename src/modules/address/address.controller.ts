@@ -22,8 +22,13 @@ export class AddressController {
 
     @FindDocs()
     @Get()
-    findAllByUser(@Req() req: AuthenticatedRequest) {
-        return this.addressService.findAllByUser(Number(req.user.userId));
+    async findAllByUser(@Req() req: AuthenticatedRequest) {
+        const addresses = await this.addressService.findAllByUser(Number(req.user.userId));
+        return {
+            success: true,
+            message: 'Endereços encontrados com sucesso!',
+            object: addresses
+        };
     }
 
     @CreateDocs()
@@ -46,8 +51,14 @@ export class AddressController {
 
     @DeleteDocs()
     @Delete(":id")
-    delete(@Param("id") id: number) {
-        return this.addressService.delete(id);
+    async delete(@Param("id") id: number) {
+        await this.addressService.delete(id);
+
+        return {
+            success: true,
+            message: 'Endereço excluído com sucesso!'
+        };
+
     }
 
     @UpdateDocs()

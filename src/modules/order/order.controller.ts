@@ -22,19 +22,35 @@ export class OrderController {
 
     @CreateDocs()
     @Post()
-    create(@Req() req: AuthenticatedRequest) {
-        return this.orderService.createOrder(Number(req.user.userId));
+    async create(@Req() req: AuthenticatedRequest) {
+
+        const order = await this.orderService.createOrder(Number(req.user.userId));
+        return {
+            success: true,
+            message: 'Pedido criado com sucesso!',
+            object: order
+        };
     }
 
     @FindByUserDocs()
     @Get('user')
-    getUserOrders(@Req() req: AuthenticatedRequest) {
-        return this.orderService.getOrdersByUser(Number(req.user.userId));
+    async getUserOrders(@Req() req: AuthenticatedRequest) {
+        const order = await this.orderService.getOrdersByUser(Number(req.user.userId));
+        return {
+            success: true,
+            message: 'Pedidos encontrados com sucesso!',
+            object: order
+        };
     }
 
     @UpdateStatusDocs()
     @Patch(':id/status')
-    updateStatus(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateOrderStatusDto) {
-        return this.orderService.updateOrderStatus(id, dto.status);
+    async updateStatus(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateOrderStatusDto) {
+        const order = await this.orderService.updateOrderStatus(id, dto.status);
+        return {
+            success: true,
+            message: 'Status do pedido atualizado com sucesso!',
+            object: order
+        };
     }
 }

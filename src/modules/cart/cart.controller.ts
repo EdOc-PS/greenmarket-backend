@@ -24,40 +24,58 @@ export class CartController {
 
     @FindDocs()
     @Get()
-    getCart(@Req() req: AuthenticatedRequest) {
-        return this.cartService.getCart(Number(req.user.userId));
+    async getCart(@Req() req: AuthenticatedRequest) {
+        const cart = await this.cartService.getCart(Number(req.user.userId));
+        return {
+            success: true,
+            message: 'Carrinho encontrado com sucesso!',
+            object: cart
+        };
     }
 
     @AddItemDocs()
     @Post('items')
-    addItem(
+    async addItem(
         @Req() req: AuthenticatedRequest,
         @Body() adddCartItemDto: AddCartItemDto
     ) {
-        return this.cartService.addItem(Number(req.user.userId), adddCartItemDto);
+        const cartItem = await this.cartService.addItem(Number(req.user.userId), adddCartItemDto);
+        return {
+            success: true,
+            message: 'Item adicionado ao carrinho com sucesso!',
+            object: cartItem
+        };
     }
 
     @UpdateItemDocs()
     @Patch('/items/:itemId')
-    updateItem(
+    async updateItem(
         @Req() req: AuthenticatedRequest,
         @Param('itemId') itemId: string,
         @Body() updateItemDto: UpdateItemDto
     ) {
-        return this.cartService.updateItem(
+        const cartItem = await this.cartService.updateItem(
             Number(req.user.userId),
             Number(itemId),
             updateItemDto.quantity
         );
+        return {
+            success: true,
+            message: 'Item atualizado no carrinho com sucesso!',
+            object: cartItem
+        };
     }
 
     @RemoveItemDocs()
     @Delete('items/:itemId')
-    removeItem(
+    async removeItem(
         @Req() req: AuthenticatedRequest,
         @Param('itemId') itemId: string
     ) {
-        return this.cartService.removeItem(Number(req.user.userId), Number(itemId));
+        await this.cartService.removeItem(Number(req.user.userId), Number(itemId));
+        return {
+            success: true,
+            message: 'Item removido do carrinho com sucesso!'
+        };
     }
-
 }

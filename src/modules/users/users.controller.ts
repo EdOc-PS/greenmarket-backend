@@ -44,14 +44,23 @@ export class UsersController {
 
     @DeleteDocs()
     @Delete(":id")
-    deleteUser(@Param("id", ParseIntPipe) id: number) {
-        return this.usersService.delete(id);
+    async deleteUser(@Param("id", ParseIntPipe) id: number) {
+        await this.usersService.delete(id);
+        return {
+            success: true,
+            message: 'Usuário excluído com sucesso!'
+        };
     }
 
     @UpdateDocs()
     @Patch(":id")
-    updateUser(@Param("id", ParseIntPipe) id: number, @Body() updatedUser: UpdateUserDto) {
-        return this.usersService.update(id, updatedUser);
+    async updateUser(@Param("id", ParseIntPipe) id: number, @Body() updatedUser: UpdateUserDto) {
+        const user = await this.usersService.update(id, updatedUser);
+        return {
+            success: true,
+            message: 'Usuário atualizado com sucesso!',
+            object: user
+        };
     }
 
 }
